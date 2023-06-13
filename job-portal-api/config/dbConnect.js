@@ -5,7 +5,7 @@ const dbConnect = () => {
     const connection = mongoose.connect(process.env.MONGODB_URI);
     console.log("Mongodb database connection successful");
   } catch (err) {
-    console.error(err);
+    console.error("err", err);
   }
 };
 
