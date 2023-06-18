@@ -1,23 +1,38 @@
+const validateMongoDbID = require("../middlewares/validateMongoDbID");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
-const registerUser = asyncHandler(async (req, res) => {
-  // First check if the user is already registered or not
-  const email = req.body.email;
-
-  //   find the user with the given email
-  const findUser = await User.findOne({ email: email });
-
-  console.log(findUser);
-  if (!findUser) {
-    // Create a new user
-    const newUser = await User.create(req.body);
-    res.status(200).json(newUser);
-  } else {
-    throw new Error("User already registered");
+// Get all user
+const getAllUser = asyncHandler(async (req, res) => {
+  try {
+    const users = await User.find().select(["-password", "-__v"]);
+    res.status(200).json({
+      status: "success",
+      message: "All user is fetched successfully",
+      users,
+    });
+  } catch (err) {
+    // throw new Error(err);
+    res.status(400).json({ message: error.message });
   }
 });
 
+// Update a user
+const updateUser = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  validateMongoDbID(_id);
+  try {
+    const user = await User.findByIdAndUpdate(_id, req.body, { new: true });
+    res.status(200).json({
+      status: "success",
+      message: "User is updated successfully",
+      user,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 module.exports = {
-  registerUser,
+  getAllUser,
+  updateUser,
 };

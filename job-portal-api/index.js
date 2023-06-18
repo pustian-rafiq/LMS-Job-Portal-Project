@@ -5,7 +5,8 @@ const dotenv = require("dotenv").config();
 const PORT = !process.env.PORT || 5000;
 const dbConnect = require("./config/dbConnect");
 const { notFound, handleError } = require("./middlewares/errorhandler");
-const userRouter = require("./routes/userRoutes");
+const authRoutes = require("./routes/authRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 dbConnect();
 
@@ -19,7 +20,8 @@ app.get("/", (req, res) => {
 });
 
 // Declare routes
-app.use("/api/auth", userRouter);
+app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // Error handler
 app.use(notFound);

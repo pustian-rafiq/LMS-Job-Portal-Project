@@ -14,7 +14,7 @@ const handleError = (err, req, res, next) => {
     message: err?.message,
     stack: err?.stack,
   });
-  next(error);
+  next(err);
 };
 
 module.exports = {
