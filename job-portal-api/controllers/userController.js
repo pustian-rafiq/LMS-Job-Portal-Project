@@ -33,10 +33,73 @@ const updateUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Fetch a single user
+const getUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbID(id);
+  try {
+    const user = await User.findById(id);
+    res.status(200).json({
+      status: "success",
+      message: "User is fetched successfully",
+      user,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
+// Block a user
+const blockUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbID(id);
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: true,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: "success",
+      message: "User is blocked successfully",
+      user,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
+// Unblock a user
+const unblockUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  validateMongoDbID(id);
+  try {
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        isBlocked: false,
+      },
+      {
+        new: true,
+      }
+    );
+    res.status(200).json({
+      status: "success",
+      message: "User is unblocked successfully",
+      user,
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
+
 // Delete a user
 const deleteUser = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  console.log(id);
   validateMongoDbID(id);
   try {
     const user = await User.findByIdAndDelete(id);
@@ -48,8 +111,12 @@ const deleteUser = asyncHandler(async (req, res) => {
     throw new Error(err);
   }
 });
+
 module.exports = {
   getAllUser,
   updateUser,
+  getUser,
+  blockUser,
+  unblockUser,
   deleteUser,
 };
