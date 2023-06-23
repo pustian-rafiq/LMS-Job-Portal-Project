@@ -32,7 +32,24 @@ const updateUser = asyncHandler(async (req, res) => {
     throw new Error(err);
   }
 });
+
+// Delete a user
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
+  validateMongoDbID(id);
+  try {
+    const user = await User.findByIdAndDelete(id);
+    res.status(200).json({
+      status: "success",
+      message: "User is deleted successfully",
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 module.exports = {
   getAllUser,
   updateUser,
+  deleteUser,
 };
