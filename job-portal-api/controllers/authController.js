@@ -1,4 +1,5 @@
 const { generateToken } = require("../config/jwtToken");
+const validateMongoDbID = require("../middlewares/validateMongoDbID");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 
@@ -43,7 +44,34 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 });
 
+// Update password
+const updatePassword = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { oldPassword, newPassword } = req.body;
+  validateMongoDbID(_id);
+
+  try {
+    const user = await User.findById(_id);
+    if (oldPassword === newPassword) {
+      throw new Error("Your new password can't be same with old password");
+    } else {
+      if (user && (await user.isPasswordMatched(newPassword))) {
+        throw new Error("Please enter a new password instead of the old one");
+      } else {
+        user.password = newPassword;
+        await user.save();
+        res.status(200).json({
+          status: "success",
+          message: "Password updated successfully",
+        });
+      }
+    }
+  } catch (err) {
+    throw new Error(err);
+  }
+});
 module.exports = {
   registerUser,
   loginUser,
+  updatePassword,
 };
