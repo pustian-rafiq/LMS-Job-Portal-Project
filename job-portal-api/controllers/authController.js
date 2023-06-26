@@ -3,7 +3,7 @@ const validateMongoDbID = require("../middlewares/validateMongoDbID");
 const User = require("../models/user");
 const asyncHandler = require("express-async-handler");
 const crypto = require("crypto");
-
+const sendMail = require("../controllers/emailController");
 const registerUser = asyncHandler(async (req, res) => {
   // First check if the user is already registered or not
   const email = req.body.email;
@@ -82,6 +82,14 @@ const forgotPasswordToken = asyncHandler(async (req, res) => {
     const token = await user.createPasswordResetToken();
     await user.save();
     const resetLink = `http://localhost:5000/api/auth/reset_password/${token}`;
+
+    const data = {
+      to: email,
+      text: `Hey ${user.first_name} ${user.last_name}`,
+      subject: "Forgot Password",
+      html: resetLink,
+    };
+    sendMail(data);
     res.status(200).json(resetLink);
   } catch (err) {
     throw new Error(err);
