@@ -1,6 +1,9 @@
 const {
   createTutorialCategory,
   getTutorialCategories,
+  getTutorialCategory,
+  updateTutorialCategory,
+  deleteTutorialCategory,
 } = require("../controllers/tutorialCategoryController");
 const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
 
@@ -13,8 +16,23 @@ tutorialCategoryRouter.post(
   createTutorialCategory
 );
 tutorialCategoryRouter.get("/", getTutorialCategories);
-tutorialCategoryRouter.get("/:id", createTutorialCategory);
-tutorialCategoryRouter.put("/:id", createTutorialCategory);
-tutorialCategoryRouter.delete("/:id", createTutorialCategory);
+tutorialCategoryRouter.get(
+  "/:id",
+  authMiddleware,
+  isAdmin,
+  getTutorialCategory
+);
+tutorialCategoryRouter.put(
+  "/:id",
+  authMiddleware,
+  isAdmin,
+  updateTutorialCategory
+);
+tutorialCategoryRouter.delete(
+  "/:id",
+  authMiddleware,
+  isAdmin,
+  deleteTutorialCategory
+);
 
 module.exports = tutorialCategoryRouter;
