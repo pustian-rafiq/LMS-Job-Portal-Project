@@ -7,21 +7,47 @@ const dbConnect = require("./config/dbConnect");
 const { notFound, handleError } = require("./middlewares/errorhandler");
 const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
+const tutorialCatRoutes = require("./routes/tutorialCategoryRoutes");
+const session = require("express-session");
+const MongoStore = require("connect-mongo");
+const passport = require("passport");
+const googleRouter = require("./routes/googleRoutes");
+const passportSetup = require("./utils/passport");
 
 dbConnect();
+
+// Use Session
+app.use(
+  session({
+    resave: false,
+    saveUninitialized: false,
+    secret: "mysecret",
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGODB_URI,
+      ttl: 12 * 60 * 60,
+    }),
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Use middlewares
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// app.get("/", (req, res) => {
+//   res.send("Welcome from LMS Job Portal");
+// });
 app.get("/", (req, res) => {
-  res.send("Welcome from LMS Job Portal");
+  res.send(`<a href='http://localhost:5000/google'>Login With Google</a>`);
 });
-
 // Declare routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/tutorial/categories", tutorialCatRoutes);
+app.use("/", googleRouter);
 
 // Error handler
 app.use(notFound);
