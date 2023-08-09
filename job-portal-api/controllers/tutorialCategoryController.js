@@ -8,7 +8,7 @@ const createTutorialCategory = asyncHandler(async (req, res) => {
     const { title } = req.body;
 
     if (title) {
-      req.body.slug = slugify(title);
+      req.body.slug = slugify(title.toLowerCase());
     }
     const createTutCategory = await TutorialCategory.create(req.body);
 
@@ -75,7 +75,7 @@ const updateTutorialCategory = asyncHandler(async (req, res) => {
     const { title } = req.body;
 
     if (title) {
-      req.body.slug = slugify(title);
+      req.body.slug = slugify(title.toLowerCase());
     }
     const updatedCategory = await TutorialCategory.findByIdAndUpdate(
       id,

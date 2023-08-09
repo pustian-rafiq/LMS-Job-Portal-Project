@@ -8,8 +8,10 @@ const createTutorial = asyncHandler(async (req, res) => {
     const { title, tutorial_category } = req.body;
 
     if (title && tutorial_category) {
-      req.body.slug = slugify(title);
-      req.body.tutorial_category_slug = slugify(tutorial_category);
+      req.body.slug = slugify(title.toLowerCase());
+      req.body.tutorial_category_slug = slugify(
+        tutorial_category.toLowerCase()
+      );
     }
     const createTutorial = await Tutorial.create(req.body);
 
@@ -46,15 +48,23 @@ const getTutorials = asyncHandler(async (req, res) => {
 
 // Get Single Tutorial Category
 const getTutorial = asyncHandler(async (req, res) => {
+  const { category_slug, tutorial_slug } = req.params;
   try {
-    const { id } = req.params;
-    validateMongoDbID(id);
-    const tutorial = await Tutorial.findById(id);
+    const tutorial = await Tutorial.findOne({
+      slug: tutorial_slug,
+      tutorial_category_slug: category_slug,
+    });
+    const tutorialTopics = await Tutorial.find({
+      tutorial_category_slug: category_slug,
+    })
+      .select("topic_name title slug tutorial_category_slug")
+      .sort("craetedAt");
     if (tutorial) {
       res.status(200).json({
         status: "success",
         message: "Tutorial found successfully",
         data: tutorial,
+        tutorialTopics,
       });
     } else {
       res.status(200).json({
@@ -76,10 +86,12 @@ const updateTutorial = asyncHandler(async (req, res) => {
     const { title, tutorial_category } = req.body;
     console.log(title, tutorial_category);
     if (title) {
-      req.body.slug = slugify(title);
+      req.body.slug = slugify(title.toLowerCase());
     }
     if (tutorial_category) {
-      req.body.tutorial_category_slug = slugify(tutorial_category);
+      req.body.tutorial_category_slug = slugify(
+        tutorial_category.toLowerCase()
+      );
     }
     const updatedTutorial = await Tutorial.findByIdAndUpdate(id, req.body, {
       new: true,

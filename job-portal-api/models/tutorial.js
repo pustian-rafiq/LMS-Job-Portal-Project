@@ -14,10 +14,7 @@ var tutorialSchema = new mongoose.Schema(
       unique: true,
       index: true,
     },
-    introduction: {
-      type: String,
-      required: true,
-    },
+
     tutorial_category: {
       type: String,
       required: true,

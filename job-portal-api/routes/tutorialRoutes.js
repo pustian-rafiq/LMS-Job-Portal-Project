@@ -11,7 +11,12 @@ const tutorialRouter = require("express").Router();
 
 tutorialRouter.post("/", authMiddleware, isAdmin, createTutorial);
 tutorialRouter.get("/", getTutorials);
-tutorialRouter.get("/:id", authMiddleware, isAdmin, getTutorial);
+tutorialRouter.get(
+  "/:category_slug/:tutorial_slug",
+  authMiddleware,
+  isAdmin,
+  getTutorial
+);
 tutorialRouter.put("/:id", authMiddleware, isAdmin, updateTutorial);
 tutorialRouter.delete("/:id", authMiddleware, isAdmin, deleteTutorial);
 
