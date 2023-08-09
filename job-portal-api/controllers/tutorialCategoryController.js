@@ -71,6 +71,12 @@ const updateTutorialCategory = asyncHandler(async (req, res) => {
   try {
     const { id } = req.params;
     validateMongoDbID(id);
+
+    const { title } = req.body;
+
+    if (title) {
+      req.body.slug = slugify(title);
+    }
     const updatedCategory = await TutorialCategory.findByIdAndUpdate(
       id,
       req.body,
@@ -81,7 +87,7 @@ const updateTutorialCategory = asyncHandler(async (req, res) => {
     if (updatedCategory) {
       res.status(200).json({
         status: "success",
-        message: "Tutorial category found",
+        message: "Tutorial category updated successfully",
         data: updatedCategory,
       });
     } else {
