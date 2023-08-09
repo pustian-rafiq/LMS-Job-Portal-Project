@@ -21,6 +21,29 @@ const createTutorialCategory = asyncHandler(async (req, res) => {
   }
 });
 
+// Get All Tutorial Category
+const getTutorialCategories = asyncHandler(async (req, res) => {
+  try {
+    const categories = await TutorialCategory.find();
+
+    console.log("categories", categories);
+    if (categories.length > 0) {
+      res.status(200).json({
+        status: "success",
+        message: "Tutorial categories found",
+        data: categories,
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        message: "Tutorial categories not found",
+      });
+    }
+  } catch (error) {
+    throw new Error(error);
+  }
+});
 module.exports = {
   createTutorialCategory,
+  getTutorialCategories,
 };
