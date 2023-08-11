@@ -123,7 +123,7 @@ const deleteReview = asyncHandler(async (req, res) => {
     const { id } = req.params;
     validateMongoDbID(id);
 
-    const deleted = await Tutorial.findByIdAndDelete(id);
+    const deleted = await Review.findByIdAndDelete(id);
     if (deleted) {
       res.status(200).json({
         status: "success",
