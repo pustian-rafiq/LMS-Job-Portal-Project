@@ -10,6 +10,7 @@ const userRoutes = require("./routes/userRoutes");
 const tutorialCatRoutes = require("./routes/tutorialCategoryRoutes");
 const tutorialRoutes = require("./routes/tutorialRoutes");
 const newsLetterRoutes = require("./routes/newsLetterRoutes");
+const reviewRoutes = require("./routes/reviewRoutes");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const passport = require("passport");
@@ -51,6 +52,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/tutorial/categories", tutorialCatRoutes);
 app.use("/api/tutorials", tutorialRoutes);
 app.use("/api/news-letter", newsLetterRoutes);
+app.use("/api/reviews", reviewRoutes);
 app.use("/", googleRouter);
 
 // Error handler
