@@ -13,6 +13,7 @@ const newsLetterRoutes = require("./routes/newsLetterRoutes");
 const reviewRoutes = require("./routes/reviewRoutes");
 const contactRoutes = require("./routes/contactRoutes");
 const videoRoutes = require("./routes/videoRoutes");
+const documentRoutes = require("./routes/documentRoutes");
 
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
@@ -58,6 +59,7 @@ app.use("/api/news-letter", newsLetterRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/videos", videoRoutes);
+app.use("/api/documents", documentRoutes);
 app.use("/", googleRouter);
 
 // Error handler
